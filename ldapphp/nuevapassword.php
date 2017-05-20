@@ -1,3 +1,41 @@
+<?php
+session_start();
+
+$antigua = $_POST['contrasena'];
+$nueva = $_POST['contrasenanueva'];
+
+$ldap_con = ldap_connect("localhost");
+$ldapconn = $ldap_con;
+
+$user = $_SESSION["user"];
+$ldap_password = $antigua;
+//$ldap_password = $_SESSION["pass"];
+//$ldap_con = $_SESSION["ldapcon"];
+$ldap_dn= $_SESSION["ldapdn"];
+
+ldap_set_option($ldap_con, LDAP_OPT_PROTOCOL_VERSION, 3);
+
+if(isset($user) and isset($nueva) and isset($antigua)) {	
+
+	$ldapbind = ldap_bind($ldap_con, $ldap_dn, $ldap_password);
+	
+	if($ldapbind) {
+		
+		echo "<p>Cambio de contraseña ";
+		if(ldap_mod_replace ($ldapconn, $ldap_dn,
+				array('userpassword' => "{MD5}".base64_encode(pack("H*",md5($nueva)))))) {
+			echo "correcto";
+		}else{
+			echo "erróneo";
+		}
+	}else{
+		echo "ERROR: Alguna de las contraseñas está vacía o tiene valores incorrectos";
+	}
+	echo ".</p>\n";
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -8,7 +46,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
 <meta name="author" content="">
-<title>M9 Interfícies web LDAP versión 2</title>
+<title>M9 Interfícies web</title>
 
 <!-- Bootstrap Core CSS -->
 <link href="bootstrap-4.0.0-alpha.6-dist/css/bootstrap.min.css" rel="stylesheet">
@@ -34,34 +72,13 @@
 			
 	<!-- Campos del formulario -->
 	<div class="row">
-		<form id="registro" class="col-xs-offset-3 col-xs-6" action="conexion.php" method="post" enctype="application/json">
-				<fieldset class="">
-					<div class="titulo">
-						<legend id="login" class="col-xs-offset-3 col-xs-6">Login</legend>
+		<form id="registro" class="col-xs-offset-3 col-xs-6" action="cambiarpassword.php" method="post" enctype="application/json">
+				<fieldset class="">						
+			
+					<div class="row">					
+					<a href="cambiarpassword.php" class="enlace">Cambiar password</button></a>
+					<a href="salirldap.php" class="enlace">Salir LDAP</button></a>
 					</div>
-			
-					<div class="row">
-						<label class="rotulo col-xs-offset-2 col-xs-2">Usuario:</label>
-						<div>
-							<span>
-								<input class="datos col-xs-3" id="usuario" name="usuario" type="text" autofocus/>
-								<p class="col-xs-3 fb-login-button" data-max-rows="1" data-size="large" data-button-type="continue_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="false"></p>
-							</span>
-						</div>
-					</div>
-			
-					<div class="row">
-						<label class="rotulo col-xs-offset-2 col-xs-2">Contraseña:</label>
-							<div>
-								<span>
-									<input class="datos col-xs-3" id="contrasena" name="contrasena" type="password" />
-									<p class="g-signin2" data-onsuccess="onSignIn"></p>
-			
-								</span>
-						</div>
-					</div>
-			
-				<button class="col-xs-offset-5 col-xs-1" type="submit"><a class="enlace">Loguearse</a></button>				
 			
 				</fieldset>
 			
