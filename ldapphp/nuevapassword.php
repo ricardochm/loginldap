@@ -15,7 +15,7 @@ $ldap_dn= $_SESSION["ldapdn"];
 
 ldap_set_option($ldap_con, LDAP_OPT_PROTOCOL_VERSION, 3);
 
-if(isset($user) and isset($nueva) and isset($antigua)) {	
+if(isset($user) and isset($nueva) and isset($antigua) and $_POST['captcha'] == "humano") {	
 
 	$ldapbind = ldap_bind($ldap_con, $ldap_dn, $ldap_password);
 	
@@ -32,6 +32,8 @@ if(isset($user) and isset($nueva) and isset($antigua)) {
 		echo "ERROR: Alguna de las contraseñas está vacía o tiene valores incorrectos";
 	}
 	echo ".</p>\n";
+}else{
+	echo "ERROR: Debes validarte como humano";
 }
 
 ?>

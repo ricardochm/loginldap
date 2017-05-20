@@ -57,8 +57,12 @@ session_start();
 									
 								<label class="col-xs-offset-6 col-xs-2">Contraseña nueva:</label>									
 									<input class="datos col-xs-3" id="contrasenanueva" name="contrasenanueva" type="password" />
+									<p class="g-signin2" data-onsuccess="onSignIn"></p>
+									
+								<label class="col-xs-offset-6 col-xs-2">Marca si eres humano o robot:</label><br>									
+									<input type="checkbox" name="captcha" value="humano"> Soy humano.<br>
+  									<input type="checkbox" name="captcha" value="robot"> Soy robot<br>
 									<p class="g-signin2" data-onsuccess="onSignIn"></p>								
-			
 								</span>
 						</div>
 					</div>				
